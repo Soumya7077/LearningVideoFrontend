@@ -14,10 +14,10 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../assets/colors/theme";
-import { BASEURL } from "@env";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { globalStyles } from "../../assets/styles/style";
+import { BASEURL } from "../../config";
 
 export default function Login() {
   const fadeAnim1 = useRef(new Animated.Value(1)).current; // Initially visible
@@ -30,7 +30,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    // console.log(BASEURL)
     Animated.timing(fadeAnim2, {
       toValue: 1,
       duration: 600,

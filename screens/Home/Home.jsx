@@ -9,10 +9,16 @@ export default function Home() {
 
     const video = useRef(null);
     const [status, setStatus] = useState({});
+    const [videoUrl, setVideoUrl] = useState('');
 
-    // useEffect(() => {
-    //     storage().ref()
-    // },[])
+    useEffect(() => {
+
+      const getVideos = async() => {
+      const url = await storage().ref('0171_The_Roaring_Burn_Bazooka!!.mkv').getDownloadURL();
+        setVideoUrl(url);
+      }
+      getVideos();
+    },[])
 
   return (
     <View style={styles.container}>
@@ -38,7 +44,7 @@ export default function Home() {
         ref={video}
         style={styles.video}
         source={{
-          uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+          uri: videoUrl,
         }}
         useNativeControls
         resizeMode={ResizeMode.CONTAIN}
