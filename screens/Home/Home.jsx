@@ -14,7 +14,7 @@ export default function Home() {
     useEffect(() => {
 
       const getVideos = async() => {
-      const url = await storage().ref('0171_The_Roaring_Burn_Bazooka!!.mkv').getDownloadURL();
+      const url = await storage().ref('coursevideos/0171_The_Roaring_Burn_Bazooka!!.mkv').getDownloadURL();
         setVideoUrl(url);
       }
       getVideos();

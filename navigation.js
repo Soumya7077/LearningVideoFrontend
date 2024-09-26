@@ -9,6 +9,7 @@ import { color } from "./assets/colors/theme";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Courses from "./screens/Courses/Courses";
 import Profile from "./screens/Profile/Profile";
+import CourseDetails from "./screens/CourseDetails/CourseDetails";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -78,13 +79,18 @@ function LoginStackNavigation() {
 
   return ( 
     <StackNavigation.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
+      
       initialRouteName={isLoggedIn ? "BottomNav" : "Login"}
     >
-      <StackNavigation.Screen name="Login" component={Login} />
-      <StackNavigation.Screen name="BottomNav" component={BottomNav} />
+      <StackNavigation.Screen name="Login" component={Login} options={{
+        headerShown:false
+      }} />
+      <StackNavigation.Screen name="BottomNav" component={BottomNav} options={{
+        headerShown:false
+      }} />
+      <StackNavigation.Screen name="CourseDetails" component={CourseDetails} options={{
+        headerTitle:"Course Details"
+      }} />
     </StackNavigation.Navigator>
   );
 }

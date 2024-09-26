@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   },
   video: {
     width: '100%',  // Make the video take up 90% of the screen's width
-    height: 280,   // Set a fixed height for the video player
+    height: '48%',   // Set a fixed height for the video player
     backgroundColor: 'black', // Background color for the video area
   },
   buttons: {
