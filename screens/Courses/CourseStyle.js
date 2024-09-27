@@ -5,12 +5,15 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    justifyContent:'space-evenly',
+    // justifyContent:'flex-start',
+    // alignItems:'flex-start',
     flexWrap: "wrap",
   },
   card: {
-    width: "43%",
-    marginTop: "3%",
+    width: "44%",
+   marginLeft:'3%',
+   marginRight:'3%',
+   marginTop:'3%',
     backgroundColor:color.white,
     borderRadius: 12,
     padding: 15,

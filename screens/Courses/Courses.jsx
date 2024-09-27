@@ -1,62 +1,56 @@
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { styles } from "./CourseStyle";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { BASEURL } from "../../config";
 
 export default function Courses() {
+  const navigation = useNavigation();
+  const [courseData, setCousrseData] = useState([]);
 
-    const navigation = useNavigation();
+  useEffect(() => {
+    const getCourseList = async () => {
+      axios({
+        method: "get",
+        url: `${BASEURL}/courseList`,
+      })
+        .then((res) => {
+          setCousrseData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    getCourseList();
+  }, []);
 
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Pressable style={styles.card} onPress={() => navigation.navigate('CourseDetails')}>
-          <View style={styles.cardHeader}>
-            <Image
-              source={{
-                uri: "https://user-images.githubusercontent.com/25181517/183568594-85e280a7-0d7e-4d1a-9028-c8c2209e073c.png",
-              }}
-              style={styles.cardImage}
-            />
-          </View>
-          <Text style={styles.courseName}>Introduction N..</Text>
-          <Text style={styles.courseDesc}>Lorem ipsum ip ...</Text>
-        </Pressable>
-        <Pressable style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Image
-              source={{
-                uri: "https://user-images.githubusercontent.com/25181517/183897015-94a058a6-b86e-4e42-a37f-bf92061753e5.png",
-              }}
-              style={styles.cardImage}
-            />
-          </View>
-          <Text style={styles.courseName}>Introduction N..</Text>
-          <Text style={styles.courseDesc}>Lorem ipsum ip ...</Text>
-        </Pressable>
-        <Pressable style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Image
-              source={{
-                uri: "https://user-images.githubusercontent.com/25181517/117447155-6a868a00-af3d-11eb-9cfe-245df15c9f3f.png",
-              }}
-              style={styles.cardImage}
-            />
-          </View>
-          <Text style={styles.courseName}>Introduction N..</Text>
-          <Text style={styles.courseDesc}>Lorem ipsum ip ...</Text>
-        </Pressable>
-        <Pressable style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Image
-              source={{
-                uri: "https://user-images.githubusercontent.com/25181517/187896150-cc1dcb12-d490-445c-8e4d-1275cd2388d6.png",
-              }}
-              style={styles.cardImage}
-            />
-          </View>
-          <Text style={styles.courseName}>Introduction N..</Text>
-          <Text style={styles.courseDesc}>Lorem ipsum ip ...</Text>
-        </Pressable>
+        {courseData.map((course) => {
+            const courseDesc = course?.courseDesc;
+            const description = courseDesc.substring(0,20)
+          return (
+            <Pressable
+              style={styles.card}
+              onPress={() => navigation.navigate("CourseDetails", {courseDetails: JSON.stringify(course)})}
+              key={course?._id}
+            >
+              <View style={styles.cardHeader}>
+                <Image
+                  source={{
+                    uri: course?.courseImage,
+                  }}
+                  style={styles.cardImage}
+                />
+              </View>
+              <Text style={styles.courseName}>{course?.courseName}</Text>
+              <Text style={styles.courseDesc}>{description}...</Text>
+            </Pressable>
+          );
+        })}
       </View>
     </ScrollView>
   );
