@@ -44,16 +44,17 @@ export default function Home() {
       <View style={styles.bannerContainer}>
         <PagerView style={styles.pagerView} initialPage={0}>
           <View key="1">
-            <View style={styles.card} key="2">
+            {/* <View style={styles.card} key="2">
               <Text>First Banner</Text>
               <Text>Swipe ➡️</Text>
-            </View>
+            </View> */}
+            <Image source={require('../../assets/banners/Banner1.png')} style={{width:'100%', height:130, resizeMode:'contain'}}/>
           </View>
-          <View key="3" style={styles.card}>
-            <Text>Second Banner</Text>
+          <View key="3" >
+          <Image source={require('../../assets/banners/Banner3.png')} style={{width:'100%', height:130, resizeMode:'contain'}}/>
           </View>
-          <View key="4" style={styles.card}>
-            <Text>Third Banner</Text>
+          <View key="4" >
+          <Image source={require('../../assets/banners/Banner2.png')} style={{width:'100%', height:130, resizeMode:'contain'}}/>
           </View>
         </PagerView>
       </View>

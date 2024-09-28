@@ -42,6 +42,7 @@ export default function Courses() {
                 <Image
                   source={{
                     uri: course?.courseImage,
+                    cache:'only-if-cached'
                   }}
                   style={styles.cardImage}
                 />
