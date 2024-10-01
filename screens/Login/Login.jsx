@@ -102,7 +102,7 @@ export default function Login() {
         method: "post",
         url: `${BASEURL}/login`,
         data: {
-          username: userName,
+          email: userName,
           password: password,
         },
       })
@@ -141,7 +141,7 @@ export default function Login() {
       <Animated.View style={[styles.inputview, { opacity: fadeAnim2 }]}>
         <Fontisto name="email" size={24} color={color.secondary} />
         <TextInput
-          placeholder="Enter Username"
+          placeholder="Enter Email"
           style={styles.inputbox}
           onChangeText={(text) => setUserName(text)}
         />
@@ -174,7 +174,7 @@ export default function Login() {
         <View>
           <Text style={styles.note}>Don't have an account?</Text>
         </View>
-        <TouchableOpacity onPress={() => Alert.alert("Coming Soon!")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           <Text style={styles.signuptext}>Signup</Text>
         </TouchableOpacity>
       </Animated.View>

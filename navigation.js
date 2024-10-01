@@ -10,6 +10,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Courses from "./screens/Courses/Courses";
 import Profile from "./screens/Profile/Profile";
 import CourseDetails from "./screens/CourseDetails/CourseDetails";
+import Register from "./screens/Register/Register";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -83,6 +84,9 @@ function LoginStackNavigation() {
       initialRouteName={isLoggedIn ? "BottomNav" : "Login"}
     >
       <StackNavigation.Screen name="Login" component={Login} options={{
+        headerShown:false
+      }} />
+      <StackNavigation.Screen name="Register" component={Register} options={{
         headerShown:false
       }} />
       <StackNavigation.Screen name="BottomNav" component={BottomNav} options={{

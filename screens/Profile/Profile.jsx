@@ -35,7 +35,7 @@ export default function Profile() {
         </View>
         <View style={styles.nameContainer}>
           <Text style={styles.nameText}>{userDetails?.name}</Text>
-          <Text style={styles.emailText}>{userDetails?.userName}</Text>
+          <Text style={styles.emailText}>{userDetails?.email}</Text>
         </View>
       </View>
 
