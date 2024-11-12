@@ -11,6 +11,8 @@ import Courses from "./screens/Courses/Courses";
 import Profile from "./screens/Profile/Profile";
 import CourseDetails from "./screens/CourseDetails/CourseDetails";
 import Register from "./screens/Register/Register";
+import ContactUs from "./screens/ContactUs/ContactUs";
+import ShortsFeed from "./screens/ShortsFeed/ShortsFeed";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -27,6 +29,9 @@ function BottomNav() {
           }else if(route.name ==="Courses"){
             iconName = focused ? "book" : "book-outline";
           }
+          else if(route.name ==="Shorts"){
+            iconName = focused ? "play-circle" : "play-circle-outline";
+          }
           else if(route.name ==="Profile"){
             iconName = focused ? "person" : "person-outline";
           }
@@ -39,6 +44,7 @@ function BottomNav() {
       })}
     >
       <BottomNavigation.Screen name="Home" component={Home} />
+      <BottomNavigation.Screen name="Shorts" component={ShortsFeed} options={{headerShown:false}} />
       <BottomNavigation.Screen name="Courses" component={Courses} />
       <BottomNavigation.Screen name="Profile" component={Profile} />
     </BottomNavigation.Navigator>
@@ -63,7 +69,7 @@ function LoginStackNavigation() {
       if (authData) {
         setIsLoggedIn(true);
       }
-      setIsLoading(false);
+      setIsLoading(true);
     };
     getUserData();
   }, []);
@@ -94,6 +100,9 @@ function LoginStackNavigation() {
       }} />
       <StackNavigation.Screen name="CourseDetails" component={CourseDetails} options={{
         headerTitle:"Course Details"
+      }} />
+      <StackNavigation.Screen name="ContactUs" component={ContactUs} options={{
+        headerTitle:"Contact Us"
       }} />
     </StackNavigation.Navigator>
   );

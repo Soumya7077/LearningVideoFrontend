@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Feather from '@expo/vector-icons/Feather';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { color } from "../../assets/colors/theme";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 
 export default function Profile() {
   const [userDetails, setUserDetails] = useState({});
@@ -22,7 +24,12 @@ export default function Profile() {
 
   const signoutPress = async () => {
     await AsyncStorage.removeItem("userData");
-    navigation.navigate('Login');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      })
+    );
   };
 
   return (
@@ -98,6 +105,23 @@ export default function Profile() {
             </View>
             <View>
               <Text style={styles.bottomText}>Help</Text>
+            </View>
+          </View>
+          <View style={styles.iconContainer}>
+            <Ionicons
+              name="chevron-forward"
+              size={24}
+              color={color.secondary}
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.profileCardBottom} onPress={() => navigation.navigate('ContactUs')}>
+          <View style={styles.iconContainer}>
+            <View style={styles.icon}>
+            <AntDesign name="message1" size={23} color={color.secondary} />
+            </View>
+            <View>
+              <Text style={styles.bottomText}>Contact Us</Text>
             </View>
           </View>
           <View style={styles.iconContainer}>

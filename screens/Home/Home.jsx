@@ -1,6 +1,8 @@
 import {
   Button,
+  FlatList,
   Image,
+  ImageBackground,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,52 +16,104 @@ import { Video, ResizeMode } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { BASEURL } from "../../config";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Home() {
   const [courseData, setCousrseData] = useState([]);
+  const navigation = useNavigation();
+  const [banners, setBanners] = useState([]);
+  const [backgroundBanner, setBackgroundBanner] = useState(
+    require("../../assets/banners/banner4.jpg")
+  );
+  
+  const [loading, setLoading] = useState(false);
+
+  const getCourseList = async () => {
+    axios({
+      method: "get",
+      url: `${BASEURL}/courseList`,
+      params: {
+        limit: 4,
+      },
+    })
+      .then((res) => {
+        setCousrseData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getBanners = async () => {
+    try {
+      const response = await axios.get(`${BASEURL}/noticelist`);
+      const banners = response.data;
+      
+
+      const updatedBanners = await Promise.all(
+        banners.map(async (banner) => {
+          let imageUrl;
+          if (banner?.image) {
+
+            imageUrl = await getBannerImage(banner?.image);
+          } else {
+            imageUrl = await getBannerImage('staticbanner.jpg');
+          }
+  
+          return { ...banner, image: imageUrl };
+        })
+      );
+  
+      setBanners(updatedBanners);
+      console.log(updatedBanners);
+    } catch (error) {
+      console.error("Error fetching banners:", error);
+    }
+  };
+  
 
   useEffect(() => {
-    const getCourseList = async () => {
-      axios({
-        method: "get",
-        url: `${BASEURL}/courseList`,
-        params:{
-          limit: 4
-        }
-      })
-        .then((res) => {
-          setCousrseData(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-
+    getBanners();
     getCourseList();
   }, []);
 
+  const getBannerImage = async (bannerUrl) => {
+    try {
+      setLoading(true);
+      const banner = await storage()
+        .ref(`banners/${bannerUrl}`)
+        .getDownloadURL();
+      return banner;
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+ 
+
   return (
-  <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Remove ScrollView wrapping around PagerView */}
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.bannerContainer}>
         <PagerView style={styles.pagerView} initialPage={0}>
-          <View key="1">
-            {/* <View style={styles.card} key="2">
-              <Text>First Banner</Text>
-              <Text>Swipe ➡️</Text>
-            </View> */}
-            <Image source={require('../../assets/banners/Banner1.png')} style={{width:'100%', height:130, resizeMode:'contain'}}/>
-          </View>
-          <View key="3" >
-          <Image source={require('../../assets/banners/Banner3.png')} style={{width:'100%', height:130, resizeMode:'contain'}}/>
-          </View>
-          <View key="4" >
-          <Image source={require('../../assets/banners/Banner2.png')} style={{width:'100%', height:130, resizeMode:'contain'}}/>
-          </View>
+          {banners?.map((banner, index) => {
+            
+            return (
+              <ImageBackground
+              key={index}
+                source={{ uri: banner?.image }}
+                style={styles.bannerBackground}
+              >
+                <Text style={styles.shortDesc}>{banner?.descShort}</Text>
+                <Text style={styles.longDesc}>{banner?.descLong}</Text>
+              </ImageBackground>
+            );
+          })}
+          
         </PagerView>
       </View>
 
-      {/* Rest of your content inside ScrollView */}
       <View>
         <Text style={styles.popularCourses}>Popular Courses</Text>
       </View>

@@ -38,5 +38,20 @@ export const styles = StyleSheet.create({
   },
   courseDesc:{
     color:color.neutral[300]
+  },
+  searchBox:{
+    marginLeft:'3%',
+   marginRight:'3%',
+   marginTop:'3%',
+   borderWidth:1,
+    borderColor:color.black,
+    borderRadius:12,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center'
+  },
+  search:{
+    padding:10,
+    
   }
 });

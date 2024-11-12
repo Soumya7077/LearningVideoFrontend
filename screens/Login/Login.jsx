@@ -12,7 +12,7 @@ import {
 import { styles } from "./LoginStyle";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { useEffect, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { color } from "../../assets/colors/theme";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -114,7 +114,12 @@ export default function Login() {
           } else {
             const userData = JSON.stringify(res.data);
             await AsyncStorage.setItem('userData', userData);
-            navigation.navigate('BottomNav');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'BottomNav' }],
+              })
+            );
             console.log(res.data);
           }
         })
