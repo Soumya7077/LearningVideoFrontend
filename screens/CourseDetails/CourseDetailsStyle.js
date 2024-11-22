@@ -30,5 +30,20 @@ export const styles = StyleSheet.create({
     },
     descContainer:{
         rowGap:100
+    },
+    contentDownloadBtn:{
+        padding:15,
+        margin:15,
+        backgroundColor:color.secondary,
+        width:'80%',
+        justifyContent:'center',
+        alignItems:'center',
+        alignSelf:'center',
+        borderRadius:10
+    },
+    btnText:{
+        color:color.white,
+        fontWeight:'700',
+        fontSize:16
     }
 })

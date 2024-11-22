@@ -13,6 +13,7 @@ import CourseDetails from "./screens/CourseDetails/CourseDetails";
 import Register from "./screens/Register/Register";
 import ContactUs from "./screens/ContactUs/ContactUs";
 import ShortsFeed from "./screens/ShortsFeed/ShortsFeed";
+import MyAccount from "./screens/MyAccount/MyAccount";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -101,9 +102,13 @@ function LoginStackNavigation() {
       <StackNavigation.Screen name="CourseDetails" component={CourseDetails} options={{
         headerTitle:"Course Details"
       }} />
+      <StackNavigation.Screen name="MyAccount" component={MyAccount} options={{
+        headerTitle:"My Account"
+      }} />
       <StackNavigation.Screen name="ContactUs" component={ContactUs} options={{
         headerTitle:"Contact Us"
       }} />
+      
     </StackNavigation.Navigator>
   );
 }

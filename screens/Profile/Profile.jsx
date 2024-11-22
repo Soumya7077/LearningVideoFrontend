@@ -1,33 +1,46 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./ProfileStyle";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import Feather from '@expo/vector-icons/Feather';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from "@expo/vector-icons/Feather";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { color } from "../../assets/colors/theme";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import { CommonActions, useFocusEffect, useNavigation } from "@react-navigation/native";
 
 export default function Profile() {
   const [userDetails, setUserDetails] = useState({});
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const getUserData = async () => {
-      const userData = JSON.parse(await AsyncStorage.getItem("userData"));
-      setUserDetails(userData);
-    };
 
+
+  const getUserData = async () => {
+    const userData = JSON.parse(await AsyncStorage.getItem("userData"));
+    console.log(userData, ";;;");
+    setUserDetails(userData);
+  };
+
+  useEffect(() => {
+    
     getUserData();
+    
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getUserData();
+      // No cleanup needed here, so no return value
+    }, [])
+  );
+  
 
   const signoutPress = async () => {
     await AsyncStorage.removeItem("userData");
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: 'Login' }],
+        routes: [{ name: "Login" }],
       })
     );
   };
@@ -37,17 +50,24 @@ export default function Profile() {
       <View style={styles.profileCard}>
         <View style={styles.profileImage}>
           <Text style={styles.profileImageText}>
-            {userDetails?.name ? userDetails.name[0] : ""}
+            {userDetails?.user?.name ? userDetails?.user?.name[0] : ""}
           </Text>
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.nameText}>{userDetails?.name}</Text>
-          <Text style={styles.emailText}>{userDetails?.email}</Text>
+          <Text style={styles.nameText}>{userDetails?.user?.name}</Text>
+          <Text style={styles.emailText}>{userDetails?.user?.email}</Text>
         </View>
       </View>
 
       <View style={styles.profileCardBottomContainer}>
-        <TouchableOpacity style={styles.profileCardBottom}>
+        <TouchableOpacity
+          style={styles.profileCardBottom}
+          onPress={() =>
+            navigation.navigate("MyAccount", {
+              userDetails: JSON.stringify(userDetails),
+            })
+          }
+        >
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
               <Ionicons name="person" size={24} color={color.secondary} />
@@ -115,10 +135,13 @@ export default function Profile() {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.profileCardBottom} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity
+          style={styles.profileCardBottom}
+          onPress={() => navigation.navigate("ContactUs")}
+        >
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
-            <AntDesign name="message1" size={23} color={color.secondary} />
+              <AntDesign name="message1" size={23} color={color.secondary} />
             </View>
             <View>
               <Text style={styles.bottomText}>Contact Us</Text>
