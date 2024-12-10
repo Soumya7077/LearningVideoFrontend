@@ -14,6 +14,8 @@ import Register from "./screens/Register/Register";
 import ContactUs from "./screens/ContactUs/ContactUs";
 import ShortsFeed from "./screens/ShortsFeed/ShortsFeed";
 import MyAccount from "./screens/MyAccount/MyAccount";
+import FavouriteCourseList from "./screens/FavouriteCourses/FavouriteCourses";
+import SubscribedCourseList from "./screens/SubscribedCourseList/SubscribedCourseList";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -107,6 +109,12 @@ function LoginStackNavigation() {
       }} />
       <StackNavigation.Screen name="ContactUs" component={ContactUs} options={{
         headerTitle:"Contact Us"
+      }} />
+      <StackNavigation.Screen name="FavouriteCourse" component={FavouriteCourseList} options={{
+        headerTitle:"Favourite Course List"
+      }} />
+      <StackNavigation.Screen name="SubscribedCourse" component={SubscribedCourseList} options={{
+        headerTitle:"My Courses"
       }} />
       
     </StackNavigation.Navigator>

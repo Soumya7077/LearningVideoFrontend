@@ -7,24 +7,32 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Feather from "@expo/vector-icons/Feather";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { color } from "../../assets/colors/theme";
-import { CommonActions, useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  CommonActions,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
+import axios from "axios";
+import { BASEURL } from "../../config";
 
 export default function Profile() {
   const [userDetails, setUserDetails] = useState({});
   const navigation = useNavigation();
 
-
-
   const getUserData = async () => {
     const userData = JSON.parse(await AsyncStorage.getItem("userData"));
-    console.log(userData, ";;;");
-    setUserDetails(userData);
+    const userId = userData?.user?._id;
+    axios({
+      method: "get",
+      url: `${BASEURL}/getuser/${userId}`,
+    }).then((res) => {
+      // console.log(res.data, ";;;");
+      setUserDetails(res.data);
+    });
   };
 
   useEffect(() => {
-    
     getUserData();
-    
   }, []);
 
   useFocusEffect(
@@ -33,7 +41,6 @@ export default function Profile() {
       // No cleanup needed here, so no return value
     }, [])
   );
-  
 
   const signoutPress = async () => {
     await AsyncStorage.removeItem("userData");
@@ -84,13 +91,38 @@ export default function Profile() {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.profileCardBottom}>
+        <TouchableOpacity
+          style={styles.profileCardBottom}
+          onPress={() => navigation.navigate("SubscribedCourse", { user: userDetails })}
+        >
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
               <Ionicons name="book-sharp" size={24} color={color.secondary} />
             </View>
             <View>
               <Text style={styles.bottomText}>My Courses</Text>
+            </View>
+          </View>
+          <View style={styles.iconContainer}>
+            <Ionicons
+              name="chevron-forward"
+              size={24}
+              color={color.secondary}
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.profileCardBottom}
+          onPress={() =>
+            navigation.navigate("FavouriteCourse", { user: userDetails })
+          }
+        >
+          <View style={styles.iconContainer}>
+            <View style={styles.icon}>
+              <Ionicons name="heart-sharp" size={24} color={color.secondary} />
+            </View>
+            <View>
+              <Text style={styles.bottomText}>My Favourite Courses</Text>
             </View>
           </View>
           <View style={styles.iconContainer}>

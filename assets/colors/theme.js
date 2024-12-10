@@ -23,4 +23,5 @@ export const color = {
         500: '#969696',
         // 700: '#656565'
     },
+    danger:"#ff2b2f"
 }

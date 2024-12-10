@@ -53,5 +53,22 @@ export const styles = StyleSheet.create({
   search:{
     padding:10,
     
+  },
+  courseNameContainer:{
+    margin:6,
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },
+  freeTypeStyle:{
+    backgroundColor:color.success,
+    color:color.white,
+    padding:5,
+    borderRadius:8
+  },
+  paidTypeStyle:{
+    backgroundColor:color.lightPink,
+    color:color.white,
+    padding:5,
+    borderRadius:8
   }
 });
