@@ -6,7 +6,7 @@ import Home from "./screens/Home/Home";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { color } from "./assets/colors/theme";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from "@expo/vector-icons/Ionicons";
 import Courses from "./screens/Courses/Courses";
 import Profile from "./screens/Profile/Profile";
 import CourseDetails from "./screens/CourseDetails/CourseDetails";
@@ -16,6 +16,7 @@ import ShortsFeed from "./screens/ShortsFeed/ShortsFeed";
 import MyAccount from "./screens/MyAccount/MyAccount";
 import FavouriteCourseList from "./screens/FavouriteCourses/FavouriteCourses";
 import SubscribedCourseList from "./screens/SubscribedCourseList/SubscribedCourseList";
+import { Image } from "react-native";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -29,13 +30,11 @@ function BottomNav() {
           let IconComponent = Ionicons;
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
-          }else if(route.name ==="Courses"){
+          } else if (route.name === "Courses") {
             iconName = focused ? "book" : "book-outline";
-          }
-          else if(route.name ==="Shorts"){
+          } else if (route.name === "Shorts") {
             iconName = focused ? "play-circle" : "play-circle-outline";
-          }
-          else if(route.name ==="Profile"){
+          } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
           }
 
@@ -46,8 +45,24 @@ function BottomNav() {
         tabBarInactiveTintColor: color.neutral[500],
       })}
     >
-      <BottomNavigation.Screen name="Home" component={Home} />
-      <BottomNavigation.Screen name="Shorts" component={ShortsFeed} options={{headerShown:false}} />
+      <BottomNavigation.Screen
+        name="Home"
+        component={Home}
+        options={{
+          headerLeft: () => (
+            <Image
+              source={require("./assets/icon.png")}
+              style={{ width: 50, height: 50, marginLeft: 12 }}
+            />
+          ),
+          headerTitle: "",
+        }}
+      />
+      <BottomNavigation.Screen
+        name="Shorts"
+        component={ShortsFeed}
+        options={{ headerShown: false }}
+      />
       <BottomNavigation.Screen name="Courses" component={Courses} />
       <BottomNavigation.Screen name="Profile" component={Profile} />
     </BottomNavigation.Navigator>
@@ -57,12 +72,9 @@ function BottomNav() {
 const StackNavigation = createNativeStackNavigator();
 
 function LoginStackNavigation() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
-
-  
 
   useEffect(() => {
     // GoogleSignin.revokeAccess();
@@ -87,49 +99,74 @@ function LoginStackNavigation() {
     }
   }, [isLoggedIn]);
 
-  return ( 
+  return (
     <StackNavigation.Navigator
-      
       initialRouteName={isLoggedIn ? "BottomNav" : "Login"}
     >
-      <StackNavigation.Screen name="Login" component={Login} options={{
-        headerShown:false
-      }} />
-      <StackNavigation.Screen name="Register" component={Register} options={{
-        headerShown:false
-      }} />
-      <StackNavigation.Screen name="BottomNav" component={BottomNav} options={{
-        headerShown:false
-      }} />
-      <StackNavigation.Screen name="CourseDetails" component={CourseDetails} options={{
-        headerTitle:"Course Details"
-      }} />
-      <StackNavigation.Screen name="MyAccount" component={MyAccount} options={{
-        headerTitle:"My Account"
-      }} />
-      <StackNavigation.Screen name="ContactUs" component={ContactUs} options={{
-        headerTitle:"Contact Us"
-      }} />
-      <StackNavigation.Screen name="FavouriteCourse" component={FavouriteCourseList} options={{
-        headerTitle:"Favourite Course List"
-      }} />
-      <StackNavigation.Screen name="SubscribedCourse" component={SubscribedCourseList} options={{
-        headerTitle:"My Courses"
-      }} />
-      
+      <StackNavigation.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <StackNavigation.Screen
+        name="Register"
+        component={Register}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <StackNavigation.Screen
+        name="BottomNav"
+        component={BottomNav}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <StackNavigation.Screen
+        name="CourseDetails"
+        component={CourseDetails}
+        options={{
+          headerTitle: "Course Details",
+        }}
+      />
+      <StackNavigation.Screen
+        name="MyAccount"
+        component={MyAccount}
+        options={{
+          headerTitle: "My Account",
+        }}
+      />
+      <StackNavigation.Screen
+        name="ContactUs"
+        component={ContactUs}
+        options={{
+          headerTitle: "Contact Us",
+        }}
+      />
+      <StackNavigation.Screen
+        name="FavouriteCourse"
+        component={FavouriteCourseList}
+        options={{
+          headerTitle: "Favourite Course List",
+        }}
+      />
+      <StackNavigation.Screen
+        name="SubscribedCourse"
+        component={SubscribedCourseList}
+        options={{
+          headerTitle: "My Courses",
+        }}
+      />
     </StackNavigation.Navigator>
   );
 }
 
-
 export default function Navigation() {
- 
-
-
   return (
     <NavigationContainer>
-      
-     <LoginStackNavigation />
+      <LoginStackNavigation />
     </NavigationContainer>
   );
 }

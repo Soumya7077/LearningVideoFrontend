@@ -95,7 +95,7 @@ export default function FavouriteCourseList() {
           <TouchableOpacity
             style={styles.imageContainer}
             onPress={() => {
-              item?.courseType === "free"
+              item?.courseType == 0
                 ? navigation.navigate("CourseDetails", {
                     courseDetails: JSON.stringify(item),
                   })
@@ -114,15 +114,15 @@ export default function FavouriteCourseList() {
             <Text style={styles.descStyle}>{description}...</Text>
             <View style={styles.lastContainer}>
               <View>
-                <Text
+                {/* <Text
                   style={
-                    item?.courseType === "free"
+                    item?.courseType == 0
                       ? styles.freeTypeStyle
                       : styles.paidTypeStyle
                   }
                 >
-                  {item?.courseType === "free" ? "Free" : "Paid"}
-                </Text>
+                  {item?.courseType == 0 ? "Free" : "Paid"}
+                </Text> */}
               </View>
               <TouchableOpacity
                 style={styles.buttonContainer}

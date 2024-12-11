@@ -9,10 +9,10 @@ import {
   View,
 } from "react-native";
 import { styles } from "./CourseStyle";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Feather from "@expo/vector-icons/Feather";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASEURL } from "../../config";
 import { color } from "../../assets/colors/theme";
@@ -26,24 +26,32 @@ export default function Courses() {
   const [favouriteCourseIds, setFavouriteCourseIds] = useState([]);
 
   useEffect(() => {
-    const getCourseList = async () => {
-      axios({
-        method: "get",
-        url: `${BASEURL}/courseList`,
-      })
-        .then((res) => {
-          setCousrseData(res.data);
-          setCourses(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-
     getCourseList();
     getUserData();
   }, []);
 
+
+  const getCourseList = async () => {
+    axios({
+      method: "get",
+      url: `${BASEURL}/courseList`,
+    })
+      .then((res) => {
+        setCousrseData(res.data);
+        setCourses(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // getCourseList();
+      getUserData();
+      // No cleanup needed here, so no return value
+    }, [])
+  );
   const getUserData = async () => {
     const userData = JSON.parse(await AsyncStorage.getItem("userData"));
     const userId = userData?.user?._id;
@@ -111,7 +119,7 @@ export default function Courses() {
         <Pressable
           style={styles.cardHeader}
           onPress={() => {
-            item?.courseType === "free"
+            item?.courseType == 0
               ? navigation.navigate("CourseDetails", {
                   courseDetails: JSON.stringify(item),
                 })
@@ -130,15 +138,15 @@ export default function Courses() {
         </Pressable>
         <View style={styles.courseNameContainer}>
           <Text style={styles.courseName}>{item?.courseName}</Text>
-          <Text
+          {/* <Text
             style={
-              item?.courseType === "free"
+              item?.courseType === 0
                 ? styles.freeTypeStyle
                 : styles.paidTypeStyle
             }
           >
-            {item?.courseType === "free" ? "Free" : "Paid"}
-          </Text>
+            {item?.courseType === 0 ? "Free" : "Paid"}
+          </Text> */}
         </View>
 
         <Text style={styles.courseDesc}>{description}...</Text>
