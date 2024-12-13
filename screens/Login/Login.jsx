@@ -137,11 +137,11 @@ export default function Login() {
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY }] }]}>
       <Animated.Image
-        source={require("../../assets/loginvector.jpg")}
+        source={require("../../assets/icon.png")}
         style={[styles.loginvector, { opacity: fadeAnim1 }]}
       />
       <Animated.Text style={[styles.signtext, { opacity: fadeAnim2 }]}>
-        LOGO
+        PARICHAY CLASSES
       </Animated.Text>
       <Animated.View style={[styles.inputview, { opacity: fadeAnim2 }]}>
         <Fontisto name="email" size={24} color={color.secondary} />

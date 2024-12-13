@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
         // backgroundColor:'#7D97F4',
         color:color.lightPink,
         borderRadius:100,
-        letterSpacing:20
+        // letterSpacing:2
     },
     inputview:{
         flexDirection:'row',
