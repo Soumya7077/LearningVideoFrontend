@@ -17,10 +17,44 @@ import MyAccount from "./screens/MyAccount/MyAccount";
 import FavouriteCourseList from "./screens/FavouriteCourses/FavouriteCourses";
 import SubscribedCourseList from "./screens/SubscribedCourseList/SubscribedCourseList";
 import { Image } from "react-native";
+import axios from "axios";
+import { BASEURL } from "./config";
+import InShorts from "./screens/InShorts/InShorts";
 
 const BottomNavigation = createBottomTabNavigator();
 
 function BottomNav() {
+  const [isReelShown, setIsReelShown] = useState(false);
+  const [isInShortsShown, setIsInShortsShown] = useState(false);
+
+  const getAppRelatedDetails = async () => {
+    axios({
+      method: "get",
+      url: `${BASEURL}/getappdetails`,
+    })
+      .then((res) => {
+        const reel = res.data.filter((e) => e.name === "reel");
+        const inshorts = res.data.filter((e) => e.name === "inshorts");
+        if (reel[0].isActive == 1) {
+          setIsReelShown(true);
+        } else {
+          setIsReelShown(false);
+        }
+        if (inshorts[0].isActive == 1) {
+          setIsInShortsShown(true);
+        } else {
+          setIsInShortsShown(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getAppRelatedDetails();
+  }, []);
+
   return (
     <BottomNavigation.Navigator
       screenOptions={({ route }) => ({
@@ -32,8 +66,10 @@ function BottomNav() {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Courses") {
             iconName = focused ? "book" : "book-outline";
-          } else if (route.name === "Shorts") {
+          } else if (route.name === "Reels") {
             iconName = focused ? "play-circle" : "play-circle-outline";
+          } else if (route.name === "InShorts") {
+            iconName = focused ? "document-text" : "document-text-outline";
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
           }
@@ -58,11 +94,18 @@ function BottomNav() {
           headerTitle: "",
         }}
       />
-      <BottomNavigation.Screen
-        name="Shorts"
-        component={ShortsFeed}
-        options={{ headerShown: false }}
-      />
+      {isReelShown && (
+        <BottomNavigation.Screen
+          name="Reels"
+          component={ShortsFeed}
+          options={{ headerShown: false }}
+        />
+      )}
+
+      {isInShortsShown && (
+        <BottomNavigation.Screen name="InShorts" component={InShorts} />
+      )}
+
       <BottomNavigation.Screen name="Courses" component={Courses} />
       <BottomNavigation.Screen name="Profile" component={Profile} />
     </BottomNavigation.Navigator>
