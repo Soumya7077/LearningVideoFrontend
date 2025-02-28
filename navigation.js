@@ -4,7 +4,7 @@ import Login from "./screens/Login/Login";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "./screens/Home/Home";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { color } from "./assets/colors/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Courses from "./screens/Courses/Courses";
@@ -16,98 +16,153 @@ import ShortsFeed from "./screens/ShortsFeed/ShortsFeed";
 import MyAccount from "./screens/MyAccount/MyAccount";
 import FavouriteCourseList from "./screens/FavouriteCourses/FavouriteCourses";
 import SubscribedCourseList from "./screens/SubscribedCourseList/SubscribedCourseList";
-import { Image } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
 import { BASEURL } from "./config";
 import InShorts from "./screens/InShorts/InShorts";
+import Assessment from "./screens/Assessment/Assessment";
+import { BlurView } from "expo-blur";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const BottomNavigation = createBottomTabNavigator();
 
-function BottomNav() {
-  const [isReelShown, setIsReelShown] = useState(false);
-  const [isInShortsShown, setIsInShortsShown] = useState(false);
+const TabButton = (props) => {
+  const { item, onPress, accessibilityState } = props;
+  const focused = accessibilityState.selected;
 
-  const getAppRelatedDetails = async () => {
-    axios({
-      method: "get",
-      url: `${BASEURL}/getappdetails`,
-    })
-      .then((res) => {
-        const reel = res.data.filter((e) => e.name === "reel");
-        const inshorts = res.data.filter((e) => e.name === "inshorts");
-        if (reel[0].isActive == 1) {
-          setIsReelShown(true);
-        } else {
-          setIsReelShown(false);
-        }
-        if (inshorts[0].isActive == 1) {
-          setIsInShortsShown(true);
-        } else {
-          setIsInShortsShown(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const scale = useSharedValue(focused ? 1.2 : 1);
+  const translateY = useSharedValue(focused ? -24 : 7);
+  const circleScale = useSharedValue(focused ? 1 : 0);
+  const textScale = useSharedValue(focused ? 1 : 0);
 
   useEffect(() => {
-    getAppRelatedDetails();
-  }, []);
+    scale.value = withTiming(focused ? 1.2 : 1, { duration: 200 });
+    translateY.value = withTiming(focused ? -24 : 7, { duration: 200 });
+    circleScale.value = withTiming(focused ? 1 : 0, { duration: 200 });
+    textScale.value = withTiming(focused ? 1 : 0, { duration: 200 });
+  }, [focused]);
+
+  const animatedButtonStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }, { translateY: translateY.value }],
+  }));
+
+  const animatedCircleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: circleScale.value }],
+  }));
+
+  const animatedTextStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: textScale.value }],
+  }));
+
+  return (
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+      activeOpacity={1}
+    >
+      <Animated.View style={[styles.container, animatedButtonStyle]}>
+        <View
+          style={[
+            styles.btn,
+            { borderColor: focused ? color.bg : color.primary }, // Adjust colors accordingly
+          ]}
+        >
+          <Animated.View style={[styles.circle, animatedCircleStyle]} />
+          <Ionicons name={item.icon} size={24} color={color.white} />
+        </View>
+        <Animated.Text style={[styles.text, animatedTextStyle]}>
+          {item.label}
+        </Animated.Text>
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+
+const TabArr = [
+  {
+    route: "Home",
+    label: "Home",
+    icon: "home",
+    component: Home,
+  },
+  {
+    route: "Reels",
+    label: "Reels",
+    icon: "play-circle",
+    component: ShortsFeed,
+  },
+  {
+    route: "InShorts",
+    label: "InShorts",
+    icon: "document-text",
+    component: InShorts,
+  },
+  {
+    route: "Courses",
+    label: "Courses",
+    icon: "book",
+    component: Courses,
+  },
+  {
+    route: "Profile",
+    label: "Profile",
+    icon: "person",
+    component: Profile,
+  },
+];
+
+function BottomNav() {
+  
 
   return (
     <BottomNavigation.Navigator
-      screenOptions={({ route }) => ({
-        animation: "fade",
-        tabBarIcon: ({ color, focused, size }) => {
-          let iconName;
-          let IconComponent = Ionicons;
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Courses") {
-            iconName = focused ? "book" : "book-outline";
-          } else if (route.name === "Reels") {
-            iconName = focused ? "play-circle" : "play-circle-outline";
-          } else if (route.name === "InShorts") {
-            iconName = focused ? "document-text" : "document-text-outline";
-          } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline";
-          }
-
-          return <IconComponent name={iconName} size={size} color={color} />;
+      screenOptions={{
+        headerShown: false,
+        // header: () => (
+        //   <View style={styles.bottomHeaderView}>
+        //     <View style={styles.leftHeader}>
+        //       <Text style={styles.hello}>Hello,</Text>
+        //       <Text style={styles.name}>{user} 👋</Text>
+        //     </View>
+        //     <View style={styles.rightHeader}>
+        //       <Image
+        //         style={styles.headerImage}
+        //         source={require("./assets/icon.png")}
+        //       />
+        //     </View>
+        //   </View>
+        // ),
+        tabBarStyle: {
+          position: "absolute",
+          height: 70,
+          bottom: 24,
+          right: 16,
+          left: 16,
+          borderRadius: 16,
+          backgroundColor: color.primary,
+          borderTopWidth: 1,
         },
-        tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: color.primary,
-        tabBarInactiveTintColor: color.neutral[500],
-      })}
+      }}
     >
-      <BottomNavigation.Screen
-        name="Home"
-        component={Home}
-        options={{
-          headerLeft: () => (
-            <Image
-              source={require("./assets/icon.png")}
-              style={{ width: 50, height: 50, marginLeft: 12 }}
-            />
-          ),
-          headerTitle: "",
-        }}
-      />
-      {isReelShown && (
-        <BottomNavigation.Screen
-          name="Reels"
-          component={ShortsFeed}
-          options={{ headerShown: false }}
-        />
-      )}
-
-      {isInShortsShown && (
-        <BottomNavigation.Screen name="InShorts" component={InShorts} />
-      )}
-
-      <BottomNavigation.Screen name="Courses" component={Courses} />
-      <BottomNavigation.Screen name="Profile" component={Profile} />
+      {TabArr.map((item, index) => {
+        return (
+          <BottomNavigation.Screen
+            key={index}
+            name={item.route}
+            component={item.component}
+            
+            options={{
+              tabBarShowLabel: false,
+              tabBarButton: (props) => <TabButton {...props} item={item} />,
+              
+            }}
+          />
+        );
+      })}
     </BottomNavigation.Navigator>
   );
 }
@@ -145,6 +200,11 @@ function LoginStackNavigation() {
   return (
     <StackNavigation.Navigator
       initialRouteName={isLoggedIn ? "BottomNav" : "Login"}
+      screenOptions={{
+        statusBarColor: color.secondary,
+        animation: "slide_from_right",
+        animationDuration: 2000,
+      }}
     >
       <StackNavigation.Screen
         name="Login"
@@ -189,6 +249,13 @@ function LoginStackNavigation() {
         }}
       />
       <StackNavigation.Screen
+        name="Assessment"
+        component={Assessment}
+        options={{
+          headerTitle: "My Assessment",
+        }}
+      />
+      <StackNavigation.Screen
         name="FavouriteCourse"
         component={FavouriteCourseList}
         options={{
@@ -213,3 +280,36 @@ export default function Navigation() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // backgroundColor: "#fff",
+    alignItems: "center",
+    // justifyContent: "center",
+  },
+  btn: {
+    width: 50,
+    height: 50,
+    borderWidth: 4,
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 25,
+  },
+  text: {
+    color: color.white,
+    fontSize: 10,
+    textAlign: "center",
+    marginTop: 6,
+    fontWeight: "500",
+  },
+  circle: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: color.primary,
+    borderRadius: 25,
+  },
+  
+});

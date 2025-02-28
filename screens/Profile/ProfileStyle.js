@@ -3,7 +3,8 @@ import { color } from "../../assets/colors/theme";
 
 export const styles = StyleSheet.create({
     container:{
-        flex:1
+        flex:1,
+        backgroundColor:color.bg
     },
     profileCard:{
         margin:'3%',

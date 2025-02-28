@@ -7,16 +7,18 @@ export const styles = StyleSheet.create({
     flex: 1,
     // margin:10,
     justifyContent: "start",
-    height,
+    height:height,
+    backgroundColor:color.bg
+   
     // padding:12
   },
   image: {
     width: "100%",
     height: "40%",
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    resizeMode: "cover",
-    backgroundColor: color.white,
+    // borderBottomLeftRadius: 20,
+    // borderBottomRightRadius: 20,
+    resizeMode: 'stretch',
+    backgroundColor: color.black,
     elevation: 8,
     shadowColor: "#000", // Shadow for iOS
     shadowOffset: { width: 0, height: 2 },

@@ -10,6 +10,8 @@ export const color = {
     fontcolor: '#283F45',
     white: '#FFFFFF',
     black: '#000000',
+    bg:'#e9e9f7',
+    skeleton:'#CCC',
 
     lightTurquoise: '#7EF4CC',
     lightBlue: '#ADD8E6',

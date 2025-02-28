@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   Pressable,
+  RefreshControl,
   ScrollView,
   Text,
   TextInput,
@@ -16,7 +17,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASEURL } from "../../config";
 import { color } from "../../assets/colors/theme";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SkeletonLoader from "../../components/SkeletonLoader";
 
 export default function Courses() {
   const navigation = useNavigation();
@@ -24,14 +27,24 @@ export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [userDetails, setUserDetails] = useState({});
   const [favouriteCourseIds, setFavouriteCourseIds] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefresh(true);
+    setTimeout(() => {
+      getCourseList();
+      setRefresh(false);
+    }, 2000);
+  }, []);
 
   useEffect(() => {
     getCourseList();
     getUserData();
   }, []);
 
-
   const getCourseList = async () => {
+    setLoading(true);
     axios({
       method: "get",
       url: `${BASEURL}/courseList`,
@@ -42,6 +55,8 @@ export default function Courses() {
       })
       .catch((err) => {
         console.log(err);
+      }).finally(() => {
+        setLoading(false);
       });
   };
 
@@ -107,6 +122,27 @@ export default function Courses() {
       });
       setCousrseData(filterCourse);
     }
+  };
+  
+  
+
+  const renderSkeleton = () => {
+    return (
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+        <SkeletonLoader width={130} height={100} borderRadius={8} />
+        </View>
+        
+        <View style={styles.courseNameContainer}>
+          <SkeletonLoader width={120} height={15} borderRadius={4} />
+        </View>
+        <SkeletonLoader width={140} height={10} borderRadius={4} />
+        <View style={styles.courseNameContainer}>
+          <SkeletonLoader width={30} height={30} borderRadius={15} />
+          <SkeletonLoader width={30} height={30} borderRadius={15} />
+        </View>
+      </View>
+    );
   };
 
   const renderItem = ({ item }) => {
@@ -181,6 +217,15 @@ export default function Courses() {
           style={{ marginRight: 15 }}
         />
       </View>
+      {loading ? (
+      <FlatList
+        data={Array.from({ length: 8 })} // Dummy array for skeletons
+        renderItem={renderSkeleton}
+        keyExtractor={(_, index) => index.toString()}
+        numColumns={2}
+        columnWrapperStyle={styles.container}
+      />
+    ) : (
       <FlatList
         data={courseData}
         renderItem={renderItem}
@@ -188,7 +233,17 @@ export default function Courses() {
         showsVerticalScrollIndicator={false}
         numColumns={2}
         columnWrapperStyle={styles.container}
+        contentContainerStyle={{ paddingBottom: 170 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={onRefresh}
+            colors={[color.white]}
+            progressBackgroundColor={color.primary}
+          />
+        }
       />
+    )}
     </View>
   );
 }
