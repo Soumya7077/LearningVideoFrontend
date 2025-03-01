@@ -150,7 +150,7 @@ export default function Profile() {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.profileCardBottom}>
+        <TouchableOpacity style={styles.profileCardBottom} >
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
               <Ionicons name="help-sharp" size={24} color={color.secondary} />

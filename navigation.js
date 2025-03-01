@@ -27,6 +27,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import ThankYou from "./components/ThankYou";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -260,6 +261,13 @@ function LoginStackNavigation() {
         component={FavouriteCourseList}
         options={{
           headerTitle: "Favourite Course List",
+        }}
+      />
+      <StackNavigation.Screen
+        name="ThankYou"
+        component={ThankYou}
+        options={{
+          headerShown:false,
         }}
       />
       <StackNavigation.Screen

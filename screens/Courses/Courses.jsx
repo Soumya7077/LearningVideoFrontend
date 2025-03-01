@@ -203,7 +203,7 @@ export default function Courses() {
   };
 
   return (
-    <View>
+    <>
       <View style={styles.searchBox}>
         <TextInput
           placeholder="Search course name..."
@@ -233,7 +233,8 @@ export default function Courses() {
         showsVerticalScrollIndicator={false}
         numColumns={2}
         columnWrapperStyle={styles.container}
-        contentContainerStyle={{ paddingBottom: 170 }}
+        
+        contentContainerStyle={{ paddingBottom: 120, backgroundColor: color.bg }}
         refreshControl={
           <RefreshControl
             refreshing={refresh}
@@ -243,7 +244,9 @@ export default function Courses() {
           />
         }
       />
+      
     )}
-    </View>
+    
+    </>
   );
 }

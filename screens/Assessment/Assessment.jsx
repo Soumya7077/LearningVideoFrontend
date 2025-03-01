@@ -1,5 +1,6 @@
 import {
   Alert,
+  BackHandler,
   ScrollView,
   Text,
   TextInput,
@@ -16,8 +17,9 @@ import { BASEURL } from "../../config";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomConfirm from "../../components/Alert";
 
-export default function Assessment() {
+export default function Assessment({ navigation }) {
   const [courseData, setCousrseData] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedNoOfQuestion, setSelectedNoOfQuestion] = useState("");
@@ -29,6 +31,8 @@ export default function Assessment() {
   const [isOptionSelected, setIsOptionSelected] = useState(false);
   const [courseId, setCourseId] = useState("");
   const [optionAttendByUser, setOptionAttendByUser] = useState([]);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [backAlertVisible, setBackAlertVisible] = useState(false);
 
   const noOfCourse = [
     { value: 5, name: "5" },
@@ -46,6 +50,40 @@ export default function Assessment() {
   useEffect(() => {
     getCourse();
   }, []);
+
+  useEffect(() => {
+      const backAction = () => {
+        setBackAlertVisible(true);
+        // Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+        //   {
+        //     text: 'Cancel',
+        //     onPress: () => null,
+        //     style: 'cancel',
+        //   },
+        //   {text: 'YES', onPress: () => BackHandler.exitApp()},
+        // ]);
+        return true;
+      };
+  
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+        
+      );
+  
+      return () => backHandler.remove();
+    }, []);
+
+
+    useEffect(() => {
+      const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+        e.preventDefault(); // Prevent back action
+  
+        setBackAlertVisible(true);
+      });
+  
+      return unsubscribe;
+    }, [navigation]);
 
   const getCourse = async () => {
     axios({
@@ -78,6 +116,14 @@ export default function Assessment() {
   };
 
   const fetchQuestionAns = async () => {
+
+    if (!selectedCourse || !selectedNoOfQuestion || !selectedType) {
+      Alert.alert(
+        "Oops!", "All fields are required"
+      );
+      return;
+    }
+
     axios({
       method: "get",
       url: `${BASEURL}/getquestionansbycourse/${selectedCourse}`,
@@ -96,19 +142,19 @@ export default function Assessment() {
         console.log(err);
         if (err.status == 404) {
           Alert.alert(
-            "Please select any course and no of question you want to attend"
+            "Oops!", "Please select any course and no. of question you want to attend "
           );
         }
       });
   };
 
   const nextClick = () => {
-    // console.log(selectedOptions);
-    if (Object.keys(selectedOptions).length !== currentIndex + 1) {
+    if (!selectedOptions[currentIndex]) {
       setIsOptionSelected(false);
       Alert.alert("Oops!", "Please select one option before clicking on next");
       return;
     }
+
     if (currentIndex < questionAns?.questionAnswer.length - 1) {
       setIsOptionSelected(true);
       setCurrentIndex(currentIndex + 1);
@@ -163,21 +209,22 @@ export default function Assessment() {
       );
       return;
     }
+    setAlertVisible(true);
 
-    Alert.alert("Are you sure you want to submit the assessment?", "", [
-      {
-        text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-      { text: "Yes", onPress: () => submitAssessment() },
-    ]);
+    // Alert.alert("Are you sure you want to submit the assessment?", "", [
+    //   {
+    //     text: "Cancel",
+    //     onPress: () => console.log("Cancel Pressed"),
+    //     style: "cancel",
+    //   },
+    //   { text: "Yes", onPress: () => submitAssessment() },
+    // ]);
   };
 
   const submitAssessment = async () => {
     const userData = JSON.parse(await AsyncStorage.getItem("userData"));
     const userId = userData?.user?._id;
-
+    setAlertVisible(false);
     axios({
       method: "post",
       url: `${BASEURL}/submitassessment`,
@@ -190,7 +237,8 @@ export default function Assessment() {
     })
       .then((res) => {
         console.log(res.data);
-        Alert.alert("Assessment submitted successfully");
+        navigation.navigate("ThankYou");
+        // Alert.alert("Assessment submitted successfully");
       })
       .catch((err) => {
         console.log(err);
@@ -223,6 +271,61 @@ export default function Assessment() {
           </TouchableOpacity>
         </View>
       )}
+
+      {alertVisible && (
+        <View
+          style={{
+            backgroundColor: "rgba(0,0,0,0.5)",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CustomConfirm
+            visible={alertVisible}
+            onClose={() => setAlertVisible(false)}
+            onConfirm={submitAssessment}
+            heading={"Do you want to submit?"}
+            message={"Are you sure you want to submit the assessment?"}
+            confirmText={"Yes, Submit"}
+            cancelText={"Cancel"}
+            confirmBtnColor={color.primary}
+          />
+        </View>
+      )}
+
+      {
+        backAlertVisible && (
+          <View
+          style={{
+            backgroundColor: "rgba(0,0,0,0.5)",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CustomConfirm
+            visible={backAlertVisible}
+            onClose={() => setBackAlertVisible(false)}
+            onConfirm={() => navigation.navigate('Home')}
+            heading={"Do you want to quit?"}
+            message={"All progress in this assessment will be lost"}
+            confirmText={"Yes, I want to quit"}
+            cancelText={"Cancel"}
+            confirmBtnColor={color.danger}
+          />
+        </View>
+        )
+      }
+
       {Object.keys(questionAns).length > 0 && (
         <View style={styles.questionContainer}>
           {/* {questionAns?.questionAnswer?.map((item, index) => {

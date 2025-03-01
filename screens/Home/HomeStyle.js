@@ -149,7 +149,8 @@ export const styles = StyleSheet.create({
   testTitle:{
     color:color.white,
     fontSize:22,
-    fontWeight:'500'
+    fontWeight:'500',
+    marginBottom:5
   },
   btnStyle:{
     marginTop:10,
