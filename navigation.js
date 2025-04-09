@@ -28,6 +28,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import ThankYou from "./components/ThankYou";
+import AssessmentHistory from "./screens/AssessmentHistory/AssessmentHistory";
+import ScoreResult from "./screens/ScoreResult/ScoreResult";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -117,7 +119,43 @@ const TabArr = [
 ];
 
 function BottomNav() {
-  
+  const [isReelShown, setIsReelShown] = useState(false);
+   const [isInShortsShown, setIsInShortsShown] = useState(false);
+ 
+   const getAppRelatedDetails = async () => {
+     axios({
+       method: "get",
+       url: `${BASEURL}/getappdetails`,
+     })
+       .then((res) => {
+        console.log(res.data);
+         const reel = res.data.filter((e) => e.name === "reel");
+         const inshorts = res.data.filter((e) => e.name === "inshorts");
+         if (reel[0].isActive == 1) {
+           setIsReelShown(true);
+         } else {
+           setIsReelShown(false);
+         }
+         if (inshorts[0].isActive == 1) {
+           setIsInShortsShown(true);
+         } else {
+           setIsInShortsShown(false);
+         }
+       })
+       .catch((err) => {
+         console.log(err);
+       });
+   };
+
+   useEffect(() => {
+    getAppRelatedDetails();
+  }, []);
+
+  const filteredTabs = TabArr.filter((tab) => {
+    if (tab.route === "Reels" && !isReelShown) return false;
+    if (tab.route === "InShorts" && !isInShortsShown) return false;
+    return true;
+  });
 
   return (
     <BottomNavigation.Navigator
@@ -149,21 +187,17 @@ function BottomNav() {
         },
       }}
     >
-      {TabArr.map((item, index) => {
-        return (
-          <BottomNavigation.Screen
-            key={index}
-            name={item.route}
-            component={item.component}
-            
-            options={{
-              tabBarShowLabel: false,
-              tabBarButton: (props) => <TabButton {...props} item={item} />,
-              
-            }}
-          />
-        );
-      })}
+      {filteredTabs.map((item, index) => (
+        <BottomNavigation.Screen
+          key={index}
+          name={item.route}
+          component={item.component}
+          options={{
+            tabBarShowLabel: false,
+            tabBarButton: (props) => <TabButton {...props} item={item} />,
+          }}
+        />
+      ))}
     </BottomNavigation.Navigator>
   );
 }
@@ -268,6 +302,22 @@ function LoginStackNavigation() {
         component={ThankYou}
         options={{
           headerShown:false,
+        }}
+      />
+      <StackNavigation.Screen
+        name="AssessmentHistory"
+        component={AssessmentHistory}
+        options={{
+          // headerTitle:'Assessment History',
+          headerShown:false
+        }}
+      />
+      <StackNavigation.Screen
+        name="ScoreResult"
+        component={ScoreResult}
+        options={{
+          // headerTitle:'Assessment History',
+          headerShown:false
         }}
       />
       <StackNavigation.Screen

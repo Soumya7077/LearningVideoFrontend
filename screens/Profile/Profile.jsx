@@ -133,13 +133,13 @@ export default function Profile() {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.profileCardBottom}>
+        <TouchableOpacity style={styles.profileCardBottom} onPress={() => navigation.navigate("AssessmentHistory")}>
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
               <FontAwesome5 name="history" size={22} color={color.secondary} />
             </View>
             <View>
-              <Text style={styles.bottomText}>Purchase History</Text>
+              <Text style={styles.bottomText}>Assessment History</Text>
             </View>
           </View>
           <View style={styles.iconContainer}>

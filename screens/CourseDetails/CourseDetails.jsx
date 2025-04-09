@@ -17,7 +17,7 @@ export default function CourseDetails({ navigation, route }) {
   const course = JSON.parse(courseDetails);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
-  const [selectedPrinter, setSelectedPrinter] = useState();
+  // const [selectedPrinter, setSelectedPrinter] = useState();
 
   const getFirebaseVideo = async () => {
     try {
@@ -44,13 +44,14 @@ export default function CourseDetails({ navigation, route }) {
       method:'get',
       url:`${BASEURL}/getcoursepdf/${courseId}`
     }).then((async res => {
-      console.log(res.data);
+      // console.log(res.data);
      const pdf =  await storage()
         .ref(`coursepdf/${res.data.downloadLink}`)
         .getDownloadURL();
         await Linking.openURL(pdf);
     })).catch((err) => {
       console.log(err);
+      Alert.alert("Oops!", "The content was not found");
     })
   };
 

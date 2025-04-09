@@ -24,7 +24,7 @@ export default function SubscribedCourseList() {
       url: `${BASEURL}/getpaidcourse/${user?.user?._id}`,
     })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSubscribedCourse(res.data);
       })
       .catch((err) => {
@@ -56,8 +56,10 @@ export default function SubscribedCourseList() {
       .split("-")
       .reverse()
       .join("-");
-    const isExpire = today > expiryDate ? true : false;
+    const isExpire = Date.parse(new Date()) > Date.parse(item?.expiryDate) ? true : false;
 
+    // console.log(Date.parse(item?.expiryDate))
+    // console.log(Date.parse(new Date()));
     return (
       <View style={styles.container}>
         <View style={styles.courseBox}>

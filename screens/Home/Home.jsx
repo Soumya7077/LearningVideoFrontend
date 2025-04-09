@@ -258,7 +258,7 @@ export default function Home() {
             </View>
           )}
 
-          {loading ? (
+          {/* {loading ? (
             <ExamLoading />
           ) : (
             <View style={styles.btnView}>
@@ -269,7 +269,10 @@ export default function Home() {
                 </Text>
                 <TouchableOpacity
                   style={styles.btnStyle}
-                  onPress={() => navigation.navigate("Assessment")}
+                  onPress={() => {
+                    navigation.navigate("Assessment");
+                    
+                  }}
                 >
                   <Text style={styles.btnText}>Try it now</Text>
                   <AntDesign
@@ -287,14 +290,14 @@ export default function Home() {
                 />
               </View>
             </View>
-          )}
+          )} */}
 
           <View>
             <Text style={styles.popularCourses}>Popular Courses</Text>
           </View>
           <View style={styles.popularContainer}>
             {loading
-              ? Array.from({ length: 6 }).map((_, index) => (
+              ? Array.from({ length: 4 }).map((_, index) => (
                   <CourseLoading key={index} />
                 ))
               : courseData.map((course) => {

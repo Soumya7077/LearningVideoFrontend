@@ -33,6 +33,7 @@ export default function Assessment({ navigation }) {
   const [optionAttendByUser, setOptionAttendByUser] = useState([]);
   const [alertVisible, setAlertVisible] = useState(false);
   const [backAlertVisible, setBackAlertVisible] = useState(false);
+  
 
   const noOfCourse = [
     { value: 5, name: "5" },
@@ -210,20 +211,16 @@ export default function Assessment({ navigation }) {
       return;
     }
     setAlertVisible(true);
-
-    // Alert.alert("Are you sure you want to submit the assessment?", "", [
-    //   {
-    //     text: "Cancel",
-    //     onPress: () => console.log("Cancel Pressed"),
-    //     style: "cancel",
-    //   },
-    //   { text: "Yes", onPress: () => submitAssessment() },
-    // ]);
+    
   };
+
+  
 
   const submitAssessment = async () => {
     const userData = JSON.parse(await AsyncStorage.getItem("userData"));
     const userId = userData?.user?._id;
+    const totalScore = optionAttendByUser.filter((e) => e.isCorrectAns).length;
+    const noOfQuestion = optionAttendByUser.length;
     setAlertVisible(false);
     axios({
       method: "post",
@@ -233,11 +230,12 @@ export default function Assessment({ navigation }) {
         courseId: courseId,
         optionAttendByUser: optionAttendByUser,
         assessmentType: selectedType,
+        totalScore:totalScore
       },
     })
       .then((res) => {
         console.log(res.data);
-        navigation.navigate("ThankYou");
+        navigation.navigate("ThankYou", { item:JSON.stringify(res.data?.questionAnswer) });
         // Alert.alert("Assessment submitted successfully");
       })
       .catch((err) => {
@@ -364,7 +362,7 @@ export default function Assessment({ navigation }) {
                         <FontAwesome
                           name="check-circle"
                           size={24}
-                          color={color.white}
+                          color={color.primary}
                           style={styles.iconStyle}
                         />
                       ) : (

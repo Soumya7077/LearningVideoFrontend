@@ -1,20 +1,24 @@
-import { Alert, BackHandler, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, BackHandler, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { color } from "../assets/colors/theme";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function ThankYou({navigation}) {
+export default function ThankYou({navigation, route}) {
+
+  const [obtainedScore, setObtainedScore] = useState(0);
+  const [questionsNo, setQuestionNo] = useState(0);
+  const [assessment, setAssessment] = useState({});
 
   useEffect(() => {
+    const {item } = route.params;
+    const assessmentData = JSON.parse(item);
+    setAssessment(assessmentData);
+    const totalScore = assessmentData?.totalScore;
+    const noOfQuestion = assessmentData?.optionAttendByUser?.length;
+    setObtainedScore(totalScore);
+    setQuestionNo(noOfQuestion);
     const backAction = () => {
-      // Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-      //   {
-      //     text: 'Cancel',
-      //     onPress: () => null,
-      //     style: 'cancel',
-      //   },
-      //   {text: 'YES', onPress: () => BackHandler.exitApp()},
-      // ]);
+      
       navigation.navigate("Home");
       return true;
     };
@@ -29,15 +33,25 @@ export default function ThankYou({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
-        <AntDesign name="checkcircle" size={50} color={color.primary} />
-        <Text style={styles.heading}>🎉 Thank You! 🎉</Text>
-        <Text style={styles.message}>
+      <Text style={styles.heading}>Quiz Result</Text>
+      <Image source={require('../assets/trophy.jpg')} style={{width:200, height:200,resizeMode:'contain' }} />
+      <Text style={styles.heading}>🎉 Thank You! 🎉</Text>
+      <Text style={styles.message}>
           Your assessment has been successfully submitted.
         </Text>
-      </View>
-      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate("Home")}>
-        <Text style={styles.btnText}>HOME</Text>
+        <Text style={styles.score}>
+          Your Score
+        </Text>
+        <View style={styles.scorecontainer}>
+        <Text style={styles.scoreText}>{obtainedScore}</Text>
+        <Text style={styles.totalScoreTxt}>/</Text>
+        <Text style={styles.totalScoreTxt}>{questionsNo}</Text>
+        </View>
+      {/* <View style={styles.container}>
+        
+      </View> */}
+      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate("ScoreResult", {item: JSON.stringify(assessment)})}>
+        <Text style={styles.btnText}>Check Score</Text>
       </TouchableOpacity>
     </View>
   );
@@ -49,6 +63,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 12,
+    backgroundColor: color.white,
   },
   heading: {
     fontSize: 24,
@@ -72,9 +87,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 12,
   },
+  score:{
+    fontSize: 24,
+    color: color.neutral[500],
+    marginTop: 15,
+    fontWeight: "600",
+  },
+
   btnText: {
     color: color.white,
     fontSize: 20,
     fontWeight: "600",
   },
+  scorecontainer:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scoreText:{
+    fontSize:24,
+    color: color.success,
+    fontWeight: "600",
+  },
+  totalScoreTxt:{
+    fontSize:24,
+    color: color.fontcolor,
+    fontWeight: "600",
+  }
 });

@@ -140,7 +140,7 @@ export const styles = StyleSheet.create({
   },
   pressedOption: {
     borderColor: color.secondary,
-    backgroundColor: color.secondary,
+    backgroundColor: "rgb(234,224,255)",
     borderWidth: 1,
     padding: 18,
     borderRadius: 10,
@@ -163,7 +163,7 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
   pressedText: {
-    color: color.white,
+    color: color.black,
     fontSize: 15,
     fontWeight: "500",
     width: "80%",
