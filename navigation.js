@@ -30,6 +30,7 @@ import Animated, {
 import ThankYou from "./components/ThankYou";
 import AssessmentHistory from "./screens/AssessmentHistory/AssessmentHistory";
 import ScoreResult from "./screens/ScoreResult/ScoreResult";
+import ChapterDetails from "./screens/chapterDetails/chapterDetails";
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -266,7 +267,14 @@ function LoginStackNavigation() {
         name="CourseDetails"
         component={CourseDetails}
         options={{
-          headerTitle: "Course Details",
+          headerTitle: "Chapters",
+        }}
+      />
+      <StackNavigation.Screen
+        name="ChapterDetails"
+        component={ChapterDetails}
+        options={{
+          headerTitle: "Chapter Details",
         }}
       />
       <StackNavigation.Screen

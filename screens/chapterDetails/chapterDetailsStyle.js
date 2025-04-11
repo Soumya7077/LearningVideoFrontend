@@ -6,55 +6,6 @@ export const styles = StyleSheet.create({
         flex:1,
         backgroundColor:color.bg,
     },
-    topContainer:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
-        margin:10,
-    },
-    chapterContainer:{
-        backgroundColor:color.white,
-        padding:10,
-        borderRadius:10,
-        margin:10,
-    },
-    nameContainer:{
-       backgroundColor:color.lightPink,
-       paddingRight:12,
-       paddingLeft:12,
-       borderRadius:12
-    },
-    timeContainer:{
-        flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'space-between',
-        
-    },
-    timeText:{
-        fontSize:15,
-        fontWeight:'500',
-        color:color.fontcolor,
-        marginLeft:5,
-    },
-    nameText:{
-        fontSize:15,
-        fontWeight:'500',
-        color:color.white,
-    },
-    bottomContainer:{
-        margin:10,
-    },
-    chapterName:{
-        fontSize:20,
-        fontWeight:'600',
-        color:color.fontcolor,
-        marginBottom:5,
-    },
-    chapterDesc:{
-        fontSize:13,
-        fontWeight:'500',
-        color:color.neutral[300],
-    },
     videoContainer:{
         marginBottom:'2%'
     },
