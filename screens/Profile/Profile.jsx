@@ -133,7 +133,7 @@ export default function Profile() {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.profileCardBottom} onPress={() => navigation.navigate("AssessmentHistory")}>
+        {/* <TouchableOpacity style={styles.profileCardBottom} onPress={() => navigation.navigate("AssessmentHistory")}>
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
               <FontAwesome5 name="history" size={22} color={color.secondary} />
@@ -149,8 +149,8 @@ export default function Profile() {
               color={color.secondary}
             />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.profileCardBottom} >
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity style={styles.profileCardBottom} >
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
               <Ionicons name="help-sharp" size={24} color={color.secondary} />
@@ -166,7 +166,7 @@ export default function Profile() {
               color={color.secondary}
             />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.profileCardBottom}
           onPress={() => navigation.navigate("ContactUs")}

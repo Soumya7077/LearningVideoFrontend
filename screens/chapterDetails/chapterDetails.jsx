@@ -19,23 +19,24 @@ export default function ChapterDetails({ navigation, route }) {
   const [url, setUrl] = useState("");
   // const [selectedPrinter, setSelectedPrinter] = useState();
 
-  const getFirebaseVideo = async () => {
-    try {
-      setLoading(true);
-      const videourl = await storage()
-        .ref(`coursevideos/${course?.videoUrl}`)
-        .getDownloadURL();
-      setUrl(videourl);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const getFirebaseVideo = async () => {
+  //   console.log(course)
+  //   try {
+  //     setLoading(true);
+  //     const videourl = await storage()
+  //       .ref(`coursevideos/${course?.videoUrl}`)
+  //       .getDownloadURL();
+  //     setUrl(videourl);
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    getFirebaseVideo();
-  }, [chapterDetails]);
+  // useEffect(() => {
+  //   getFirebaseVideo();
+  // }, [chapterDetails]);
 
   
 
@@ -70,7 +71,7 @@ export default function ChapterDetails({ navigation, route }) {
             <Video
               style={styles.video}
               source={{
-                uri: url,
+                uri: course.videoUrl,
               }}
               useNativeControls={true}
               resizeMode={ResizeMode.CONTAIN}
